@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+    container_name: password_manager_app
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    restart: always
+    volumes:
+      - .:/app
+
+  db:
+    image: postgres:15
+    container_name: password_manager_db
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: password_manager_redis
+    env_file:
+      - .env
+    ports:
+      - "6379:6379"
+    restart: always
+
+volumes:
+  postgres_data:
